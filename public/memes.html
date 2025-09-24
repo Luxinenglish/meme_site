@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Memes</title>
+</head>
+<body>
+<h1>Memes du lycée la mache</h1>
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="meme" accept="image/*" required>
+    <button type="submit">Poster</button>
+</form>
+<div id="gallery"></div>
+<script>
+    function formatTime(ts) {
+        const d = new Date(ts);
+        return d.toLocaleString(); // local readable format
+    }
+
+    async function loadMemes() {
+        const res = await fetch('/api/memes');
+        const memes = await res.json();
+        const gallery = document.getElementById('gallery');
+        gallery.innerHTML = '';
+        memes.forEach(m => {
+            const card = document.createElement('div');
+            card.style.display = 'block';
+            card.style.margin = '10px';
+            card.style.textAlign = 'center';
+
+            const header = document.createElement('div');
+            header.style.fontWeight = 'bold';
+            header.style.marginBottom = '4px';
+            header.textContent = m.username || 'Unknown';
+
+            const timeEl = document.createElement('div');
+            timeEl.style.fontSize = '0.85em';
+            timeEl.style.color = '#666';
+            timeEl.style.marginBottom = '6px';
+            timeEl.textContent = formatTime(m.time);
+
+            const img = document.createElement('img');
+            img.src = '/meme/' + m.uuid + '.jpg';
+            img.style.maxWidth = '100%'; // responsive, will follow CSS card width
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
+
+            card.appendChild(header);
+            card.appendChild(timeEl);
+            card.appendChild(img);
+            gallery.appendChild(card);
+        });
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        if (res.ok) {
+            loadMemes();
+        } else {
+            alert("Erreur d'upload.");
+        }
+    });
+
+    loadMemes();
+</script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+        background: #f5f7fb;
+    }
+
+    #gallery {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column; /* stack one after another */
+        align-items: center;
+        gap: 20px;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    #gallery > div {
+        width: 100%;
+        max-width: 720px; /* larger cards so gifs appear bigger */
+        box-sizing: border-box;
+        background: #fff;
+        border: 1.5px solid #bbb;
+        border-radius: 10px;
+        padding: 12px 8px 10px 8px;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    form {
+        margin-bottom: 20px;
+    }
+</style>
+</body>
+</html>

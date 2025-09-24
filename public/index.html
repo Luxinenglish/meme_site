@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Meme Site</title>
+</head>
+<body>
+<span class="pseudo_box">
+  <h1>Rentre ton pseudo !</h1>
+  <form id="loginForm">
+    <input type="text" id="username" required>
+    <button type="submit">😉</button>
+  </form>
+</span>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+      if (res.ok) {
+        window.location.href = '/memes.html';
+      } else {
+        alert("Change de pseudo t'i es un fou toi !");
+      }
+    });
+  </script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        text-align: center;
+    }
+    input {
+        padding: 10px;
+        font-size: 16px;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .pseudo_box {
+        display: inline-block;
+        padding: 20px;
+        border: 2px solid #000;
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        justify-content: center;
+        align-items: center;
+    }
+
+</style>
+</body>
+</html>
