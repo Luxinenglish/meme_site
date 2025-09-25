@@ -5,10 +5,12 @@
     <title>Memes</title>
 </head>
 <body>
-<h1>Memes du lycée la mache</h1>
+<h1>Photos du lycée la mache</h1>
 <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" name="meme" accept="image/*" required>
-    <button type="submit">Poster</button>
+    <span class="files">
+    <input type="file" name="media" id="mediaInput" class="custom-file-input" accept="image/*,video/*,.gif" multiple>
+    <button type="submit" class="custom-submit-btn">Poster</button>
+        </span>
 </form>
 <div id="gallery"></div>
 <script>
@@ -66,17 +68,58 @@
     loadMemes();
 </script>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 20px;
-        background: #f5f7fb;
+    .files {
+        margin-bottom: 10px;
+    padding: 18px 16px;
+    border: 2px solid #0077ff;
+    border-radius: 14px;
+    box-shadow: 2px 2px 12px rgba(0, 119, 255, 0.13);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: #eaf3ff;
+}
+
+.custom-file-input {
+    display: block;
+    padding: 8px 12px;
+    border: 2px solid #0077ff;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 1em;
+    cursor: pointer;
+    transition: border 0.2s, box-shadow 0.2s;
+    width: 100%;
+    max-width: 320px;
+}
+.custom-file-input:hover, .custom-file-input:focus {
+    border-color: #005fcc;
+    box-shadow: 0 0 0 2px #b3d8ff;
+}
+
+.custom-submit-btn {
+    background: linear-gradient(90deg, #0077ff 0%, #00c6ff 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 28px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,119,255,0.10);
+    transition: background 0.2s, transform 0.1s;
+}
+.custom-submit-btn:hover, .custom-submit-btn:focus {
+    background: linear-gradient(90deg, #005fcc 0%, #0099cc 100%);
+    transform: translateY(-2px) scale(1.03);
     }
 
     #gallery {
         margin-top: 20px;
         display: flex;
-        flex-direction: column; /* stack one after another */
+        flex-direction: column;
         align-items: center;
         gap: 20px;
         border-radius: 10px;
@@ -85,7 +128,7 @@
 
     #gallery > div {
         width: 100%;
-        max-width: 720px; /* larger cards so gifs appear bigger */
+        max-width: 720px;
         box-sizing: border-box;
         background: #fff;
         border: 1.5px solid #bbb;
@@ -101,6 +144,32 @@
 
     form {
         margin-bottom: 20px;
+    }
+
+    @media (max-width: 800px) {
+        #gallery > div {
+            max-width: 98vw;
+            padding: 8px 2vw 8px 2vw;
+        }
+    }
+
+    @media (max-width: 500px) {
+        body {
+            margin: 6px;
+        }
+        h1 {
+            font-size: 1.2em;
+        }
+        #gallery {
+            padding: 2px;
+            gap: 10px;
+        }
+        #gallery > div {
+            padding: 6px 1vw 6px 1vw;
+        }
+        img {
+            border-radius: 4px;
+        }
     }
 </style>
 </body>

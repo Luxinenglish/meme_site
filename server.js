@@ -43,22 +43,27 @@ app.post('/api/login', (req, res) => {
     res.json({ success: true });
 });
 
-// API: upload meme
-app.post('/api/upload', upload.single('meme'), (req, res) => {
+// javascript
+// Replace existing /api/upload route with this (accept multiple files)
+app.post('/api/upload', upload.array('media', 12), (req, res) => {
     const username = req.cookies.username;
     if (!isValidUsername(username)) {
         return res.status(400).json({ error: 'Invalid or missing username' });
     }
-    const uuid = path.basename(req.file.filename, path.extname(req.file.filename));
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: 'No files uploaded' });
+    }
+
     const registry = JSON.parse(fs.readFileSync(REGISTRY_FILE));
-    registry.push({
-        uuid,
-        username,
-        time: Date.now()
+    const now = Date.now();
+    req.files.forEach(file => {
+        const uuid = path.basename(file.filename, path.extname(file.filename));
+        registry.push({ uuid, username, time: now });
     });
     fs.writeFileSync(REGISTRY_FILE, JSON.stringify(registry, null, 2));
     res.json({ success: true });
 });
+
 
 // API: list memes (last 7 days)
 app.get('/api/memes', (req, res) => {
